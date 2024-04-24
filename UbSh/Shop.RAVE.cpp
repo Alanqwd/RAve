@@ -393,7 +393,7 @@ void DeleteElementByIndex()
 	} while (index < 1 || index > size);
 	for (int i = 0; i < size; i++)
 	{
-		delete &CountArr[i];
+		
 
 	}
 }
