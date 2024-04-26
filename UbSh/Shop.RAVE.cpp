@@ -6,6 +6,8 @@
 int size = 10;
 int receiptSize = 1;
 int* idArr = new int[size];
+double cash = 100000.0;
+double cashIncome = 0, cardIncome = 0, totalIncome = 0;
 std::string* nameArr = new std::string[size];
 int* CountArr = new int[size];
 double* priceArr = new double[size];
@@ -32,6 +34,7 @@ void AddToStorage();
 void ChangeStorage();
 void AddElementToEnd();
 void DeleteElementByIndex();
+void CashStatus();
 
 int main()
 {
@@ -76,8 +79,8 @@ void Start()
 {
 	std::cout << "\t\tДобро пожаловать в Магазин профессионалных игровых гарнитур < RAVE > " << "\n" << "\n";
 
-	std::string adminLogin = "admin";
-	std::string adminPassword = "admin"; 
+	std::string adminLogin = "1";
+	std::string adminPassword = "1"; 
 	std::string login, password;
 	int choose;
 	bool exit = false; 
@@ -179,9 +182,10 @@ void Shop()
 			std::cout << "4 - Списать товар\n";
 			std::cout << "5 - Пополнить товар\n";
 			std::cout << "6 - Изменение склада\n";
+			std::cout << "7 - Показать кассу\n";
 			std::cout << "0 - Закончить смену\n";
 			std::cin >> choose;
-		} while (choose < 0 || choose > 6);
+		} while (choose < 0 || choose > 7);
 		if (choose == 1)
 		{
 			ShowStorage();
@@ -210,8 +214,13 @@ void Shop()
 		{
 			break;
 		}
-		else
+		else if (choose == 7)
 		{
+			CashStatus();
+		}
+		
+		{
+			CashStatus();
 			std::cerr << "Error";
 		}
 
@@ -238,10 +247,10 @@ void CreateStorage()
 }
 void PrintReceipt()
 {
-	std::cout << "Название\t\t\tКол-во\tЦена\n";
+	std::cout << "\tНазвание\t\tКол-во\tЦена\n";
 	for (int i = 0; i < receiptSize; i++)
 	{
-		std::cout << nameReceiptArr[i] << "\t\t" << CountReceiptArr[i] << "\t" << priceReceiptArr[i] << "\n";
+		std::cout <<  "" << nameReceiptArr[i] << "" << CountReceiptArr[i] << "\t" << priceReceiptArr[i] << "\n";
 	}
 	std::cout << "\n";
 }
@@ -302,7 +311,7 @@ void ChangeStorage()
 		std::cout << "2 - Убрать товар из склада\n";
 		std::cout << "0 - Выход\n";
 		std::cin >> choose;
-	} while (choose < 0 || choose < 2);
+	} while (choose < 0 || choose > 2);
 	if (choose == 1)
 	{
 		AddElementToEnd();
@@ -391,11 +400,40 @@ void DeleteElementByIndex()
 		std::cin >> index;
 
 	} while (index < 1 || index > size);
-	for (int i = 0; i < size; i++)
+	for (int i = 0, g = 0; g < size, i < size; g++, i++)
 	{
-		
 
+		if (index - 1 == i)
+		{
+			i++;
+			idArr[g] = idArrTemp[i];
+			nameArr[g] = nameArrTemp[g];
+			CountArr[g] = CountArrTemp[i];
+			priceArr[g] = priceArrTemp[i];
+
+		}
+		else
+		{
+			idArr[g] = idArrTemp[g];
+			nameArr[g] = nameArrTemp[i];
+			CountArr[g] = CountArrTemp[i];
+			priceArr[g] = priceArrTemp[i];
+
+		}
 	}
+	delete[]idArrTemp;
+	delete[]nameArrTemp;
+	delete[]CountArrTemp;
+	delete[]priceArrTemp;
+
+
+
+}
+void CashStatus()
+{
+	totalIncome = cashIncome + cardIncome;
+	std::cout << "Наличные в кассе: " << cash << "\nВыручка за наличные: " << cashIncome << "\nВыручка по безналу: " << cardIncome << "\n\nИтоговая выручка за смену: " << totalIncome << "\n\n";
+
 }
 void Selling()
 {
@@ -464,7 +502,7 @@ void Selling()
 			{
 				continue;
 			}
-			std::cout << "Купить еще1 товар?: \n";
+			std::cout << "Купить еще 1 товар?: \n";
 			std::cout << "1 - Да\n2 - Закончить покупки\n";
 			std::cin >> confirm;
 			if (confirm == '1')
@@ -475,8 +513,22 @@ void Selling()
 
 		} while (true);
 		PrintReceipt();
-
-
+		int pay = 0;
+		std::cout << "\n\n\n";
+		do
+		{
+           std::cout << "1 - Наличные\n2 - Оплата картой\n\n";
+		   std::cin >> pay;
+		} while (pay < 1 || pay > 2);
+		if (pay == 1)
+		{
+			cash += totalIncome;
+			cashIncome += totalSum;
+		}
+		else if (pay == 2)
+		{
+			cardIncome += totalSum;
+		}
 	}
 
 	
